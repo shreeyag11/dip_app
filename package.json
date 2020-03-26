@@ -1,0 +1,30 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "parcel serve index.html -d docs --no-cache",
+    "build": "parcel build index.html -d docs --public-url=/dip_app/ --no-cache"
+  },
+  "dependencies": {
+    "buefy": "^0.8.13",
+    "components": "^0.1.0",
+    "core-js": "^3.6.4",
+    "src": "^1.1.2",
+    "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4",
+    "vue-router": "^3.1.5",
+    "vuex": "^3.1.2"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.1.1",
+    "cssnano": "^4.1.10",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-wasm.rs": "^1.2.15",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
