@@ -2,6 +2,14 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
+  "alias": {
+    "components": "./src/components",
+    "views": "./src/views"
+  },
+  "staticFiles": {
+    "staticPath": "static",
+    "watcherGlob": "**"
+  },
   "scripts": {
     "serve": "parcel serve index.html -d docs --no-cache",
     "build": "parcel build index.html -d docs --public-url=/dip_app/ --no-cache"
@@ -10,6 +18,7 @@
     "buefy": "^0.8.13",
     "components": "^0.1.0",
     "core-js": "^3.6.4",
+    "pixi.js": "^5.2.1",
     "src": "^1.1.2",
     "vue": "^2.6.11",
     "vue-hot-reload-api": "^2.3.4",
@@ -26,7 +35,9 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-vue": "^6.2.2",
     "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.3.1",
     "parcel-plugin-wasm.rs": "^1.2.15",
     "vue-template-compiler": "^2.6.11"
   }

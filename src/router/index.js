@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import Viewer from '../views/Viewer.vue';
+import ViewerPage from '../views/ViewerPage.vue';
 
 Vue.use(VueRouter);
 
@@ -14,7 +14,7 @@ const routes = [
   {
     path: '/viewer',
     name: 'Viewer',
-    component: Viewer,
+    component: ViewerPage,
   },
 ];
 
