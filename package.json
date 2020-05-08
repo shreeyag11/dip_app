@@ -11,8 +11,8 @@
     "watcherGlob": "**"
   },
   "scripts": {
-    "serve": "parcel serve index.html -d docs --no-cache",
-    "build": "parcel build index.html -d docs --public-url=/dip_app/ --no-cache"
+    "serve": "cd crate && wasm-pack build --release && cd .. && parcel serve index.html -d docs --no-cache",
+    "build": "cd crate && wasm-pack build --release && cd .. && parcel build index.html -d docs --public-url=/dip_app/ --no-cache"
   },
   "dependencies": {
     "buefy": "^0.8.13",
@@ -39,6 +39,7 @@
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.3.1",
     "parcel-plugin-wasm.rs": "^1.2.15",
+    "sass": "^1.26.5",
     "vue-template-compiler": "^2.6.11"
   }
 }

@@ -1,9 +1,9 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import Buefy from 'buefy';
 import * as PIXI from 'pixi.js';
 import router from './router';
 import store from './store';
-import 'buefy/dist/buefy.css';
 import App from './App.vue';
 import lib from '../crate/Cargo.toml';
 
@@ -19,6 +19,7 @@ const myLib = {
 
 Vue.use(myLib);
 Vue.use(Buefy);
+Vue.use(Vuex);
 Vue.config.productionTip = false;
 
 const app = new Vue({

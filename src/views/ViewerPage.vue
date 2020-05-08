@@ -1,16 +1,21 @@
 <template>
-  <div class="about">
-    <h1>This is not the viewer page</h1>
-    <Viewer></Viewer>
-  </div>
+  <section class="section is-full">
+    <FilePicker></FilePicker>
+    <Log></Log>
+    <ImageViewer></ImageViewer>
+  </section>
 </template>
 
 <script>
-import Viewer from '/src/components/Viewer.vue';
+import ImageViewer from '/src/components/ImageViewer.vue';
+import FilePicker from '/src/components/FilePicker.vue';
+import Log from '/src/components/Log.vue';
 
 export default {
   components: {
-    Viewer
+    ImageViewer,
+    FilePicker,
+    Log
   }
 }
 </script>
