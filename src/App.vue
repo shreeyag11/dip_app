@@ -1,10 +1,6 @@
 <template>
   <div id="app" >
     <NavBar></NavBar>
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/viewer">Viewer</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
@@ -19,6 +15,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "~bulma/sass/utilities/_all";
 
+$section-padding: 1.5rem 1.5rem;
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
 </style>

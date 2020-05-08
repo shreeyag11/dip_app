@@ -1,5 +1,8 @@
 <template>
-  <div id="viewerDiv"></div>
+  <div class="container viewerDiv has-text-centered">
+    <div id="viewerDiv">
+    </div>
+  </div>
 </template>
 
 <script>
@@ -24,3 +27,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.viewerDiv {
+  padding-top: 2rem;
+  justify-content: center;
+}
+</style>
