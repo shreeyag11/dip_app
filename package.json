@@ -12,7 +12,8 @@
   },
   "scripts": {
     "serve": "cd crate && wasm-pack build --release && cd .. && parcel serve index.html -d docs --no-cache",
-    "build": "cd crate && wasm-pack build --release && cd .. && parcel build index.html -d docs --public-url=/dip_app/ --no-cache"
+    "build": "cd crate && wasm-pack build --release && cd .. && parcel build index.html -d docs --public-url=/dip_app/ --no-cache",
+    "build-local": "cd crate && wasm-pack build --release && cd .. && parcel build index.html -d docs --no-cache"
   },
   "dependencies": {
     "buefy": "^0.8.13",

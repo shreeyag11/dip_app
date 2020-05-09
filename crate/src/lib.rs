@@ -17,11 +17,10 @@ pub fn init() {
     set_panic_hook();
 }
 #[derive(Serialize)]
-pub struct FileParseResponse {
+pub struct FileHeaderParseResponse {
     file_type: String,
     height: usize,
     width: usize,
-    pixels: Vec<u8>,
 }
 
 macro_rules! unwrap {
@@ -57,12 +56,11 @@ macro_rules! unwrap {
             }
         }
     };
-
 }
 
-#[wasm_bindgen]
-pub fn parse(file_text: String) -> Result<JsValue, JsValue> {
-    let lines: Vec<&str> = file_text.split('\n').collect();
+#[allow(unreachable_patterns)]
+pub fn parse_header(file_text: &String) -> Result<FileHeaderParseResponse, JsValue> {
+    let lines: Vec<&str> = file_text.split('\n').take(3).collect();
     let mut errors: Vec<String> = vec![];
 
     let file_type = lines[0];
@@ -90,10 +88,35 @@ pub fn parse(file_text: String) -> Result<JsValue, JsValue> {
         ));
     }
 
+    Ok(FileHeaderParseResponse {
+        file_type: String::from(file_type),
+        height,
+        width,
+    })
+}
+
+#[wasm_bindgen]
+pub fn parse_header_json(file_text: String) -> Result<JsValue, JsValue> {
+    Ok(JsValue::from_serde(&(parse_header(&file_text).unwrap())).unwrap())
+}
+
+#[allow(unreachable_patterns)]
+#[wasm_bindgen]
+pub fn parse_pixels(file_text: String) -> Result<Vec<u8>, JsValue> {
+    let lines: Vec<&str> = file_text.split('\n').collect();
+
+    let header = parse_header(&file_text).unwrap();
+    let file_type = header.file_type;
+    let height = header.height;
+    let width = header.width;
+    let mut errors: Vec<String> = vec![];
+
     let mut pixels: Vec<u8> = Vec::with_capacity(height * width);
 
     if file_type == "RGB" {
         for (no, line) in lines.iter().enumerate().skip(3) {
+            let no = no + 1;
+
             let line = String::from(*line);
             let colors: Vec<&str> = line.split_whitespace().collect();
 
@@ -107,9 +130,24 @@ pub fn parse(file_text: String) -> Result<JsValue, JsValue> {
                 continue;
             }
 
-            let red: u8 = unwrap!(colors[0].parse(), errors, no, "At line {}: Cannot parse the red component as a number.");
-            let green: u8 = unwrap!(colors[1].parse(), errors, no, "At line {}: Cannot parse the green component as a number.");
-            let blue: u8 = unwrap!(colors[2].parse(), errors, no, "At line {}: Cannot parse the blue component as a number.");
+            let red: u8 = unwrap!(
+                colors[0].parse(),
+                errors,
+                no,
+                "At line {}: Cannot parse the red component as a number."
+            );
+            let green: u8 = unwrap!(
+                colors[1].parse(),
+                errors,
+                no,
+                "At line {}: Cannot parse the green component as a number."
+            );
+            let blue: u8 = unwrap!(
+                colors[2].parse(),
+                errors,
+                no,
+                "At line {}: Cannot parse the blue component as a number."
+            );
 
             pixels.push(red);
             pixels.push(green);
@@ -134,13 +172,6 @@ pub fn parse(file_text: String) -> Result<JsValue, JsValue> {
         let errors = errors.join("#!@");
         Err(JsValue::from(errors))
     } else {
-        Ok(
-            JsValue::from_serde(&FileParseResponse {
-                file_type: String::from(file_type),
-                height: height,
-                width: width,
-                pixels: pixels
-            }).unwrap()
-        )
+        Ok(pixels)
     }
 }

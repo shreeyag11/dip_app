@@ -8,12 +8,8 @@
               <p>
                 <b-icon icon="upload" size="is-large"></b-icon>
               </p>
-              <p v-if="dropFile" class="is-size-4">
-                Successfully read {{ dropFile.name }}
-              </p>
-              <p v-else class="is-size-4">
-                Drop your files here or click to upload
-              </p>
+              <p v-if="dropFile" class="is-size-4">Successfully read {{ dropFile.name }}</p>
+              <p v-else class="is-size-4">Drop your files here or click to upload</p>
             </div>
           </section>
         </b-upload>
@@ -39,8 +35,10 @@ export default {
       reader.onload = event => {
         let text = event.target.result.trim();
         try {
-          this.$store.commit("ADD_FILE", this.lib.parse(text));
-          console.log(this.lib.parse(text));
+          let header = this.lib.parse_header_json(text);
+          header.pixels = new Uint8ClampedArray(this.lib.parse_pixels(text));
+
+          this.$store.commit("ADD_FILE", header);
         } catch (errors) {
           this.$store.commit("ADD_FILE_PARSE_ERRORS", errors);
         }
