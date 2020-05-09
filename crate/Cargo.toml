@@ -11,14 +11,19 @@ crate-type = ["cdylib"]
 
 [dependencies]
 cfg-if = "0.1.10"
-wasm-bindgen = "0.2.59"
 console_error_panic_hook = "0.1.6"
+serde = "^1.0.59"
+serde_derive = "^1.0.59"
 
 [dependencies.web-sys]
 version = "0.3.36"
 features = [
   'ImageData'
 ]
+
+[dependencies.wasm-bindgen]
+version = "0.2.59"
+features = ["serde-serialize"]
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = ['-O4']

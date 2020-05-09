@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate serde_derive;
+
 use console_error_panic_hook::set_once as set_panic_hook;
 use wasm_bindgen::prelude::*;
 
@@ -13,21 +16,52 @@ extern "C" {
 pub fn init() {
     set_panic_hook();
 }
+#[derive(Serialize)]
+pub struct FileParseResponse {
+    file_type: String,
+    height: usize,
+    width: usize,
+    pixels: Vec<u8>,
+}
 
 macro_rules! unwrap {
     ($x:expr, $e:ident, $line_no:expr) => {
         match $x {
             Ok(val) => val,
             Err(e) => {
-                $e.push(format!("At line {}: {}", $line_no, e));
+                match e {
+                    std::num::ParseIntError { .. } => {
+                        $e.push(format!("At line {}: Cannot parse as a number.", $line_no));
+                    }
+                    _ => {
+                        $e.push(format!("At line {}: {}", $line_no, e));
+                    }
+                };
                 0
             }
         }
     };
+    ($x:expr, $e:ident, $line_no:expr, $msg:expr) => {
+        match $x {
+            Ok(val) => val,
+            Err(e) => {
+                match e {
+                    std::num::ParseIntError { .. } => {
+                        $e.push(format!($msg, $line_no));
+                    }
+                    _ => {
+                        $e.push(format!("At line {}: {}", $line_no, e));
+                    }
+                };
+                0
+            }
+        }
+    };
+
 }
 
 #[wasm_bindgen]
-pub fn parse(file_text: String) -> Result<Vec<u8>, JsValue> {
+pub fn parse(file_text: String) -> Result<JsValue, JsValue> {
     let lines: Vec<&str> = file_text.split('\n').collect();
     let mut errors: Vec<String> = vec![];
 
@@ -73,9 +107,9 @@ pub fn parse(file_text: String) -> Result<Vec<u8>, JsValue> {
                 continue;
             }
 
-            let red: u8 = unwrap!(colors[0].parse(), errors, no);
-            let green: u8 = unwrap!(colors[1].parse(), errors, no);
-            let blue: u8 = unwrap!(colors[2].parse(), errors, no);
+            let red: u8 = unwrap!(colors[0].parse(), errors, no, "At line {}: Cannot parse the red component as a number.");
+            let green: u8 = unwrap!(colors[1].parse(), errors, no, "At line {}: Cannot parse the green component as a number.");
+            let blue: u8 = unwrap!(colors[2].parse(), errors, no, "At line {}: Cannot parse the blue component as a number.");
 
             pixels.push(red);
             pixels.push(green);
@@ -97,9 +131,16 @@ pub fn parse(file_text: String) -> Result<Vec<u8>, JsValue> {
     }
 
     if errors.len() != 0 {
-        let errors = errors.join("\n");
+        let errors = errors.join("#!@");
         Err(JsValue::from(errors))
     } else {
-        Ok(pixels)
+        Ok(
+            JsValue::from_serde(&FileParseResponse {
+                file_type: String::from(file_type),
+                height: height,
+                width: width,
+                pixels: pixels
+            }).unwrap()
+        )
     }
 }
