@@ -36,7 +36,7 @@ export default {
         let text = event.target.result.trim();
         try {
           let header = this.lib.parse_header_json(text);
-          header.pixels = new Uint8ClampedArray(this.lib.parse_pixels(text));
+          header.pixels = new Uint8ClampedArray(this.lib.parse_pixels_json(text));
 
           this.$store.commit("ADD_FILE", header);
         } catch (errors) {

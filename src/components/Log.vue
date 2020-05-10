@@ -17,7 +17,13 @@ export default {
   computed: {
     fileParseErrors: function() {
       if (this.$store.state.fileParseErrors) {
-        let errors = this.$store.state.fileParseErrors.split("#!@");
+        if (this.$store.state.fileParseErrors.split) {
+          let errors = this.$store.state.fileParseErrors.split("#!@");
+        }
+        else {
+          let errors = [this.$store.state.fileParseErrors];
+        }
+        
         if (errors.length >= 15) {
           errors = errors.slice(0, 15);
           errors.push("😭 And I stopped counting after the first 15 errors");

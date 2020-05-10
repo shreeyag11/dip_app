@@ -101,8 +101,7 @@ pub fn parse_header_json(file_text: String) -> Result<JsValue, JsValue> {
 }
 
 #[allow(unreachable_patterns)]
-#[wasm_bindgen]
-pub fn parse_pixels(file_text: String) -> Result<Vec<u8>, JsValue> {
+pub fn parse_pixels(file_text: String) -> (Vec<u8>, Vec<String>) {
     let lines: Vec<&str> = file_text.split('\n').collect();
 
     let header = parse_header(&file_text).unwrap();
@@ -168,10 +167,23 @@ pub fn parse_pixels(file_text: String) -> Result<Vec<u8>, JsValue> {
         }
     }
 
+    (pixels, errors)
+}
+
+#[wasm_bindgen]
+pub fn parse_pixels_json(file_text: String) -> Result<Vec<u8>, JsValue> {
+    let (pixels, errors) = parse_pixels(file_text);
+    
     if errors.len() != 0 {
         let errors = errors.join("#!@");
         Err(JsValue::from(errors))
     } else {
         Ok(pixels)
     }
+
+}
+
+pub fn render_pixels(pixels: Vec<u8>, selector: &str) -> Result<(), ()> {
+
+    Ok(())
 }
