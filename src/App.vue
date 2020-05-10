@@ -1,5 +1,6 @@
 <template>
   <div id="app" >
+    <FileNotification></FileNotification>
     <NavBar></NavBar>
     <router-view/>
   </div>
@@ -7,9 +8,11 @@
 
 <script>
 import NavBar from '/src/components/NavBar.vue';
+import FileNotification from '/src/components/FileNotification.vue';
 
 export default {
   components: {
+    FileNotification,
     NavBar
   }  
 }
