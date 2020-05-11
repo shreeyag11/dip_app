@@ -5,7 +5,7 @@
         <p>Log</p>
       </div>
       <div class="message-body" id="errorLog">
-        <p v-for="msg in logMessage">{{ msg.trim() }}</p>
+        <p v-for="msg in logMessage">{{ msg }}</p>
       </div>
     </article>
   </div>
