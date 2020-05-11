@@ -7,7 +7,7 @@
 </template>
 
 <script>
-//  TODO: Image viewer doesnt disappear after a succeful file is followed by a dumb file
+//  TODO: Dhruv [11/5]: Image viewer doesnt disappear after a succeful file is followed by a dumb file
 import ImageViewer from "../components/ImageViewer.vue";
 import FilePicker from "../components/FilePicker.vue";
 import Log from "../components/Log.vue";

@@ -7,6 +7,8 @@
 </template>
 
 <script>
+// TODO: Shreeya - make drag and drop work everywhere.
+
 import NavBar from './components/NavBar.vue';
 import FileNotification from './components/FileNotification.vue';
 
