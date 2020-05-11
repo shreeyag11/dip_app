@@ -1,9 +1,9 @@
 {
-  "author": "You <you@example.com>",
-  "name": "rust-webpack-template",
+  "author": "Dhruv Dhamani <dhruv.dhaamni@gmail.com>",
+  "name": "dip_app",
   "version": "0.1.0",
   "scripts": {
-    "build": "rimraf docs pkg && webpack",
+    "build": "rimraf docs pkg && webpack --output-public-path=/dip_app/",
     "start": "rimraf docs pkg && webpack-dev-server --open -d",
     "test": "cargo test && wasm-pack test --headless"
   },
