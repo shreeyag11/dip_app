@@ -1,15 +1,16 @@
 <template>
   <section class="section is-full">
-    <FilePicker></FilePicker>
-    <Log></Log>
     <ImageViewer></ImageViewer>
+    <Log></Log>
+    <FilePicker></FilePicker>
   </section>
 </template>
 
 <script>
-import ImageViewer from '/src/components/ImageViewer.vue';
-import FilePicker from '/src/components/FilePicker.vue';
-import Log from '/src/components/Log.vue';
+//  TODO: Image viewer doesnt disappear after a succeful file is followed by a dumb file
+import ImageViewer from "/src/components/ImageViewer.vue";
+import FilePicker from "/src/components/FilePicker.vue";
+import Log from "/src/components/Log.vue";
 
 export default {
   components: {
@@ -17,5 +18,5 @@ export default {
     FilePicker,
     Log
   }
-}
+};
 </script>

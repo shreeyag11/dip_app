@@ -16,18 +16,19 @@ import Vuex from "vuex";
 export default {
   computed: {
     fileParseErrors: function() {
+      let errors = undefined;
       if (this.$store.state.fileParseErrors) {
         if (this.$store.state.fileParseErrors.split) {
-          let errors = this.$store.state.fileParseErrors.split("#!@");
+          errors = this.$store.state.fileParseErrors.split("#!@");
+        } else {
+          errors = [this.$store.state.fileParseErrors];
         }
-        else {
-          let errors = [this.$store.state.fileParseErrors];
-        }
-        
+
         if (errors.length >= 15) {
           errors = errors.slice(0, 15);
           errors.push("😭 And I stopped counting after the first 15 errors");
         }
+
         return errors;
       } else return undefined;
     },

@@ -59,7 +59,7 @@ macro_rules! unwrap {
 }
 
 #[allow(unreachable_patterns)]
-pub fn parse_header(file_text: &String) -> Result<FileHeaderParseResponse, JsValue> {
+pub fn parse_header(file_text: &String) -> (FileHeaderParseResponse, Vec<String>) {
     let lines: Vec<&str> = file_text.split('\n').take(3).collect();
     let mut errors: Vec<String> = vec![];
 
@@ -78,6 +78,43 @@ pub fn parse_header(file_text: &String) -> Result<FileHeaderParseResponse, JsVal
     let height: usize = unwrap!(lines[1].parse(), errors, 2);
     let width: usize = unwrap!(lines[2].parse(), errors, 3);
 
+    (
+        FileHeaderParseResponse {
+        file_type: String::from(file_type),
+        height,
+        width,
+        }, 
+        errors
+    )
+}
+
+#[wasm_bindgen]
+pub fn parse_header_json(file_text: String) -> Result<JsValue, JsValue> {
+
+    let (res, errors) = parse_header(&file_text);
+
+    if errors.len() != 0 {
+        let errors = errors.join("#!@");
+        Err(JsValue::from(errors))
+    } else {
+            Ok(JsValue::from_serde(&res).unwrap())
+
+    }
+}
+
+#[allow(unreachable_patterns)]
+pub fn parse_pixels(file_text: String) -> (Vec<u8>, Vec<String>) {
+    let lines: Vec<&str> = file_text.split('\n').collect();
+
+    let (header, errs) = parse_header(&file_text);
+    let file_type = header.file_type;
+    let height = header.height;
+    let width = header.width;
+    let mut errors: Vec<String> = vec![];
+    for e in errs {
+        errors.push(e);
+    }
+
     if lines.len() - 3 != height * width {
         errors.push(format!(
             "Expected height ({}) * width ({}) pixels (= {}), but file has {} pixels",
@@ -87,29 +124,7 @@ pub fn parse_header(file_text: &String) -> Result<FileHeaderParseResponse, JsVal
             lines.len() - 3
         ));
     }
-
-    Ok(FileHeaderParseResponse {
-        file_type: String::from(file_type),
-        height,
-        width,
-    })
-}
-
-#[wasm_bindgen]
-pub fn parse_header_json(file_text: String) -> Result<JsValue, JsValue> {
-    Ok(JsValue::from_serde(&(parse_header(&file_text).unwrap())).unwrap())
-}
-
-#[allow(unreachable_patterns)]
-pub fn parse_pixels(file_text: String) -> (Vec<u8>, Vec<String>) {
-    let lines: Vec<&str> = file_text.split('\n').collect();
-
-    let header = parse_header(&file_text).unwrap();
-    let file_type = header.file_type;
-    let height = header.height;
-    let width = header.width;
-    let mut errors: Vec<String> = vec![];
-
+    
     let mut pixels: Vec<u8> = Vec::with_capacity(height * width);
 
     if file_type == "RGB" {
@@ -180,7 +195,6 @@ pub fn parse_pixels_json(file_text: String) -> Result<Vec<u8>, JsValue> {
     } else {
         Ok(pixels)
     }
-
 }
 
 pub fn render_pixels(pixels: Vec<u8>, selector: &str) -> Result<(), ()> {

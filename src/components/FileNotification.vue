@@ -1,6 +1,6 @@
 <template>
-        <div class="notification is-primary notify">
-            <div>Successfully parsed {{ this.$store.state.file.name }}
+        <div class="notification is-primary notify" v-if="this.$store.state.fileParseSuccessful">
+            Successfully parsed {{ this.$store.state.file.name }}
         </div>
 </template>
 
