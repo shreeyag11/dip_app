@@ -21,6 +21,22 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    PARSE_FILE: function (context, dropFile) {
+      const reader = new FileReader();
+      reader.readAsText(dropFile);
+      reader.onerror = error => console.log(error);
+      reader.onload = event => {
+        let text = event.target.result.trim();
+        try {
+          let header = this._vm.lib.parse_header_json(text);
+          header.pixels = new Uint8ClampedArray(this._vm.lib.parse_pixels_json(text));
+          header.name = dropFile.name;
+          context.commit("ADD_FILE", header);
+        } catch (errors) {
+          context.commit("ADD_FILE_PARSE_ERRORS", errors);
+        }
+      };
+    }
   },
   modules: {
   },
