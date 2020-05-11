@@ -1,5 +1,9 @@
 {
-    "cSpell.words": [
-        "Buefy"
-    ]
+    "files.exclude": {
+        "**/.vscode": true,
+        "**/docs": true,
+        "**/node_modules": true,
+        "**/pkg": true,
+        "**/target": true
+    }
 }

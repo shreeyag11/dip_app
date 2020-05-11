@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import NavBar from '/src/components/NavBar.vue';
-import FileNotification from '/src/components/FileNotification.vue';
+import NavBar from './components/NavBar.vue';
+import FileNotification from './components/FileNotification.vue';
 
 export default {
   components: {

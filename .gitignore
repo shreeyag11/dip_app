@@ -1,3 +1,4 @@
 node_modules
-crate/target
-crate/pkg
+/target
+/pkg
+/wasm-pack.log

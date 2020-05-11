@@ -1,46 +1,33 @@
 {
-  "name": "app",
+  "author": "You <you@example.com>",
+  "name": "rust-webpack-template",
   "version": "0.1.0",
-  "private": true,
-  "alias": {
-    "components": "./src/components",
-    "views": "./src/views"
-  },
-  "staticFiles": {
-    "staticPath": "static",
-    "watcherGlob": "**"
-  },
   "scripts": {
-    "serve": "cd crate && wasm-pack build --release && cd .. && parcel serve index.html -d docs --no-cache",
-    "build": "cd crate && wasm-pack build --release && cd .. && parcel build index.html -d docs --public-url=/dip_app/ --no-cache",
-    "build-local": "cd crate && wasm-pack build --release && cd .. && parcel build index.html -d docs --no-cache"
+    "build": "rimraf docs pkg && webpack",
+    "start": "rimraf docs pkg && webpack-dev-server --open -d",
+    "test": "cargo test && wasm-pack test --headless"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@wasm-tool/wasm-pack-plugin": "^1.1.0",
+    "babel-loader": "^8.1.0",
+    "copy-webpack-plugin": "^5.0.3",
+    "css-loader": "^3.5.3",
+    "rimraf": "^3.0.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.2.1",
+    "vue-loader": "^15.9.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.3",
+    "webpack-dev-server": "^3.7.1"
   },
   "dependencies": {
-    "buefy": "^0.8.13",
-    "components": "^0.1.0",
-    "core-js": "^3.6.4",
-    "pixi.js": "^5.2.1",
-    "src": "^1.1.2",
+    "buefy": "^0.8.18",
+    "pixi.js": "^5.2.4",
     "vue": "^2.6.11",
-    "vue-hot-reload-api": "^2.3.4",
-    "vue-router": "^3.1.5",
-    "vuex": "^3.1.2"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ],
-  "devDependencies": {
-    "@vue/component-compiler-utils": "^3.1.1",
-    "cssnano": "^4.1.10",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-vue": "^6.2.2",
-    "parcel-bundler": "^1.12.4",
-    "parcel-plugin-static-files-copy": "^2.3.1",
-    "parcel-plugin-wasm.rs": "^1.2.15",
-    "sass": "^1.26.5",
-    "vue-template-compiler": "^2.6.11"
+    "vue-router": "^3.1.6",
+    "vuex": "^3.4.0"
   }
 }

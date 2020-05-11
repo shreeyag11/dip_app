@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="~/static/logo.png">
+    <img alt="Vue logo" src="logo.png">
   </div>
 </template>
 
