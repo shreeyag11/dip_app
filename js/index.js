@@ -4,7 +4,6 @@ import router from './router.js';
 import store from './store.js';
 import App from './App.vue';
 import Buefy from 'buefy';
-import * as PIXI from 'pixi.js';
 
 /* eslint-disable */
 import("../pkg/index.js").then(lib => {
@@ -12,7 +11,6 @@ import("../pkg/index.js").then(lib => {
         install: function (Vue, options) {
             lib.init();
             Vue.prototype.lib = lib;
-            Vue.prototype.PIXI = PIXI;
         }
     };
 

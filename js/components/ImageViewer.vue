@@ -8,48 +8,30 @@
 import { mapState } from 'vuex';
 
 export default {
-  data: () => ({
-    image: undefined,
-  }),
+  data: () => ({}),
   computed: {
     ...mapState(['fileParseSuccessful', 'file']),
   },
   watch: {
     file(newVal) {
-      const canvas = document.createElement('canvas');
-      canvas.width = newVal.width;
-      canvas.height = newVal.height;
-
-      const ctx = canvas.getContext('2d');
-      ctx.putImageData(new ImageData(newVal.pixels, newVal.width, newVal.height), 0, 0);
-      this.image = {
-        dataURL: canvas.toDataURL(),
-        width: newVal.width,
-        height: newVal.height,
-      };
-    },
-    image(img) {
       const viewerDiv = document.getElementById('viewerDiv');
 
       while (viewerDiv.lastElementChild) {
         viewerDiv.removeChild(viewerDiv.lastElementChild);
       }
 
-      const app = new this.PIXI.Application({
-        width: img.width,
-        height: img.height,
-        backgroundColor: 0xaaaaaa,
-      });
+      const canvas = document.createElement('canvas');
+      canvas.width = newVal.width;
+      canvas.height = newVal.height;
 
-      viewerDiv.appendChild(app.view);
+      const ctx = canvas.getContext('2d');
+      ctx.putImageData(
+        new ImageData(newVal.pixels, newVal.width, newVal.height),
+        0,
+        0,
+      );
 
-      const IMG = this.PIXI.Sprite.from(img.dataURL);
-      IMG.anchor.set(0.5);
-
-      IMG.x = app.screen.width / 2;
-      IMG.y = app.screen.height / 2;
-
-      app.stage.addChild(IMG);
+      viewerDiv.appendChild(canvas);
     },
   },
 };
