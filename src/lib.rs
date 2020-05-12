@@ -14,6 +14,8 @@ extern "C" {
 pub fn init() {
     set_panic_hook();
 }
+
+// TODO: Try turning this to inspectable to get rid of JsParsing
 #[derive(Serialize)]
 pub struct FileHeaderParseResponse {
     file_type: String,
