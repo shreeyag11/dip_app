@@ -6,7 +6,7 @@
   >
     <FileNotification />
     <NavBar />
-    <router-view />
+    <router-view id="routerView"/>
   </div>
 </template>
 
@@ -60,4 +60,20 @@ $section-padding: 1.5rem 1.5rem;
 
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
+
+body {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+#app {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+#routerView {
+  flex: 1 1 auto;
+}
 </style>
