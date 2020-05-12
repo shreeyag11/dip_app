@@ -19,7 +19,7 @@ export default {
   },
   watch: {
     file(newVal) {
-      if (this.$router.currentRoute.name == 'Viewer') {
+      if (this.$router.currentRoute.name === 'Viewer') {
         this.fileChanged(newVal);
       }
     },

@@ -6,7 +6,7 @@
   >
     <FileNotification />
     <NavBar />
-      <router-view />
+    <router-view />
   </div>
 </template>
 
@@ -28,7 +28,7 @@ export default {
 
       if (ev.dataTransfer.items) {
         // Use DataTransferItemList interface to access the file(s)
-        for (let i = 0; i < ev.dataTransfer.items.length; i++) {
+        for (let i = 0; i < ev.dataTransfer.items.length; i += 1) {
           // If dropped items aren't files, reject them
           if (ev.dataTransfer.items[i].kind === 'file') {
             const file = ev.dataTransfer.items[i].getAsFile();
@@ -37,7 +37,7 @@ export default {
         }
       } else {
         // Use DataTransfer interface to access the file(s)
-        for (let i = 0; i < ev.dataTransfer.files.length; i++) {
+        for (let i = 0; i < ev.dataTransfer.files.length; i += 1) {
           console.log(
             `2. ... file[${i}].name = ${ev.dataTransfer.files[i].name}`,
           );
