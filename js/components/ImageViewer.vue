@@ -8,30 +8,36 @@
 import { mapState } from 'vuex';
 
 export default {
-  data: () => ({}),
+  data: () => ({
+    canvas: undefined,
+    viewerDiv: undefined,
+  }),
+  mounted() {
+    this.viewerDiv = document.getElementById('viewerDiv');
+    this.canvas = document.createElement('canvas');
+  },
   computed: {
+    ctx() {
+      return this.canvas.getContext('2d');
+    },
     ...mapState(['fileParseSuccessful', 'file']),
   },
   watch: {
     file(newVal) {
-      const viewerDiv = document.getElementById('viewerDiv');
-
-      while (viewerDiv.lastElementChild) {
-        viewerDiv.removeChild(viewerDiv.lastElementChild);
+      while (this.viewerDiv.lastElementChild) {
+        this.viewerDiv.removeChild(this.viewerDiv.lastElementChild);
       }
 
-      const canvas = document.createElement('canvas');
-      canvas.width = newVal.width;
-      canvas.height = newVal.height;
+      this.canvas.width = newVal.width;
+      this.canvas.height = newVal.height;
 
-      const ctx = canvas.getContext('2d');
-      ctx.putImageData(
+      this.ctx.putImageData(
         new ImageData(newVal.pixels, newVal.width, newVal.height),
         0,
         0,
       );
 
-      viewerDiv.appendChild(canvas);
+      this.viewerDiv.appendChild(this.canvas);
     },
   },
 };
