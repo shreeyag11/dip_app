@@ -1,16 +1,17 @@
 <template>
   <div
     id="app"
-    ondrop="(event) => console.log(event)"
+    @drop="dropHandler"
+    @dragover="dragOverHandler"
   >
     <FileNotification />
     <NavBar />
-    <router-view />
+      <router-view />
   </div>
 </template>
 
 <script>
-// TODO: Shreeya - make drag and drop work everywhere.
+// TODO: Shreeya - make div #app cover the whole screen
 
 import NavBar from './components/NavBar.vue';
 import FileNotification from './components/FileNotification.vue';
@@ -19,6 +20,34 @@ export default {
   components: {
     FileNotification,
     NavBar,
+  },
+  methods: {
+    dropHandler(ev) {
+      // Prevent default behavior (Prevent file from being opened)
+      ev.preventDefault();
+
+      if (ev.dataTransfer.items) {
+        // Use DataTransferItemList interface to access the file(s)
+        for (let i = 0; i < ev.dataTransfer.items.length; i++) {
+          // If dropped items aren't files, reject them
+          if (ev.dataTransfer.items[i].kind === 'file') {
+            const file = ev.dataTransfer.items[i].getAsFile();
+            this.$store.dispatch('PARSE_FILE', file);
+          }
+        }
+      } else {
+        // Use DataTransfer interface to access the file(s)
+        for (let i = 0; i < ev.dataTransfer.files.length; i++) {
+          console.log(
+            `2. ... file[${i}].name = ${ev.dataTransfer.files[i].name}`,
+          );
+        }
+      }
+    },
+    dragOverHandler(ev) {
+      // Prevent default behavior (Prevent file from being opened)
+      ev.preventDefault();
+    },
   },
 };
 </script>

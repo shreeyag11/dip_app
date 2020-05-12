@@ -8,36 +8,43 @@
 import { mapState } from 'vuex';
 
 export default {
-  data: () => ({
-    canvas: undefined,
-    viewerDiv: undefined,
-  }),
+  data: () => ({}),
   mounted() {
-    this.viewerDiv = document.getElementById('viewerDiv');
-    this.canvas = document.createElement('canvas');
+    if (this.$store.state.file && this.$store.state.fileParseSuccessful) {
+      this.fileChanged(this.$store.state.file);
+    }
   },
   computed: {
-    ctx() {
-      return this.canvas.getContext('2d');
-    },
     ...mapState(['fileParseSuccessful', 'file']),
   },
   watch: {
     file(newVal) {
-      while (this.viewerDiv.lastElementChild) {
-        this.viewerDiv.removeChild(this.viewerDiv.lastElementChild);
+      if (this.$router.currentRoute.name == 'Viewer') {
+        this.fileChanged(newVal);
+      }
+    },
+  },
+  methods: {
+    fileChanged(newVal) {
+      console.log('trying to render');
+      const viewerDiv = document.getElementById('viewerDiv');
+
+      while (viewerDiv.lastElementChild) {
+        viewerDiv.removeChild(viewerDiv.lastElementChild);
       }
 
-      this.canvas.width = newVal.width;
-      this.canvas.height = newVal.height;
+      const canvas = document.createElement('canvas');
+      canvas.width = newVal.width;
+      canvas.height = newVal.height;
+      const ctx = canvas.getContext('2d');
 
-      this.ctx.putImageData(
+      ctx.putImageData(
         new ImageData(newVal.pixels, newVal.width, newVal.height),
         0,
         0,
       );
 
-      this.viewerDiv.appendChild(this.canvas);
+      viewerDiv.appendChild(canvas);
     },
   },
 };
