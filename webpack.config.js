@@ -68,7 +68,9 @@ module.exports = {
 
     new WasmPackPlugin({
       crateDirectory: __dirname,
-      forceMode: "production"
+      forceMode: "production",
+      pluginLogLevel: 'error',
+      extraArgs: "--no-typescript"
     }),
 
     new VueLoaderPlugin()

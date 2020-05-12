@@ -26,7 +26,6 @@ dependencies = [
 name = "dip-lib"
 version = "0.1.0"
 dependencies = [
- "cfg-if",
  "console_error_panic_hook",
  "serde",
  "serde_derive",

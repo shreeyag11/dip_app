@@ -1,5 +1,5 @@
 <template>
-  <div id="app" >
+  <div id="app" ondrop="(event) => console.log(event)">
     <FileNotification></FileNotification>
     <NavBar></NavBar>
     <router-view/>
@@ -22,6 +22,7 @@ export default {
 
 <style lang="scss">
 @import "~bulma/sass/utilities/_all";
+@import "~bulma-pageloader";
 
 $section-padding: 1.5rem 1.5rem;
 

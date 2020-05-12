@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "buefy": "^0.8.18",
+    "bulma-pageloader": "^0.3.0",
     "pixi.js": "^5.2.4",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",

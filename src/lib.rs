@@ -6,8 +6,6 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 extern "C" {
-    // Use `js_namespace` here to bind `console.log(..)` instead of just
-    // `log(..)`
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
 }
@@ -59,7 +57,7 @@ macro_rules! unwrap {
 }
 
 #[allow(unreachable_patterns)]
-pub fn parse_header(file_text: &String) -> (FileHeaderParseResponse, Vec<String>) {
+pub fn parse_header(file_text: &str) -> (FileHeaderParseResponse, Vec<String>) {
     let lines: Vec<&str> = file_text.split('\n').take(3).collect();
     let mut errors: Vec<String> = vec![];
 
@@ -89,9 +87,9 @@ pub fn parse_header(file_text: &String) -> (FileHeaderParseResponse, Vec<String>
 }
 
 #[wasm_bindgen]
-pub fn parse_header_json(file_text: String) -> Result<JsValue, JsValue> {
+pub fn parse_header_json(file_text: &str) -> Result<JsValue, JsValue> {
 
-    let (res, errors) = parse_header(&file_text);
+    let (res, errors) = parse_header(file_text);
 
     if errors.len() != 0 {
         let errors = errors.join("#!@");
@@ -103,7 +101,7 @@ pub fn parse_header_json(file_text: String) -> Result<JsValue, JsValue> {
 }
 
 #[allow(unreachable_patterns)]
-pub fn parse_pixels(file_text: String) -> (Vec<u8>, Vec<String>) {
+pub fn parse_pixels(file_text: &str) -> (Vec<u8>, Vec<String>) {
     let lines: Vec<&str> = file_text.split('\n').collect();
 
     let (header, errs) = parse_header(&file_text);
@@ -186,7 +184,7 @@ pub fn parse_pixels(file_text: String) -> (Vec<u8>, Vec<String>) {
 }
 
 #[wasm_bindgen]
-pub fn parse_pixels_json(file_text: String) -> Result<Vec<u8>, JsValue> {
+pub fn parse_pixels_json(file_text: &str) -> Result<Vec<u8>, JsValue> {
     let (pixels, errors) = parse_pixels(file_text);
     
     if errors.len() != 0 {
