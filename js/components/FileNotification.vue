@@ -1,14 +1,17 @@
 <template>
-        <div class="notification is-primary notify" v-if="this.$store.state.fileParseSuccessful">
-            Successfully parsed {{ this.$store.state.file.name }}
-        </div>
+  <div
+    v-if="this.$store.state.fileParseSuccessful"
+    class="notification is-primary notify"
+  >
+    Successfully parsed {{ this.$store.state.file.name }}
+  </div>
 </template>
 
 <script>
 export default {
-    
-    
-}
+
+
+};
 </script>
 
 <style scoped>

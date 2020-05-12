@@ -18,10 +18,12 @@ const routes = [
   },
 ];
 
+/* eslint-disable */
 const router = new VueRouter({
   mode: 'history',
   base: __webpack_public_path__,
   routes,
 });
+/* eslint-enable */
 
 export default router;

@@ -1,5 +1,8 @@
 <template>
-  <div id="app" ondrop="(event) => console.log(event)">
+  <div
+    id="app"
+    ondrop="(event) => console.log(event)"
+  >
     <FileNotification />
     <NavBar />
     <router-view />
@@ -15,9 +18,9 @@ import FileNotification from './components/FileNotification.vue';
 export default {
   components: {
     FileNotification,
-    NavBar
-  }  
-}
+    NavBar,
+  },
+};
 </script>
 
 <style lang="scss">
