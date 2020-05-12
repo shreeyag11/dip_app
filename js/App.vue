@@ -1,8 +1,8 @@
 <template>
   <div id="app" ondrop="(event) => console.log(event)">
-    <FileNotification></FileNotification>
-    <NavBar></NavBar>
-    <router-view/>
+    <FileNotification />
+    <NavBar />
+    <router-view />
   </div>
 </template>
 

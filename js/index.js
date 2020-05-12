@@ -6,9 +6,8 @@ import App from './App.vue';
 import Buefy from 'buefy';
 import * as PIXI from 'pixi.js';
 
-
+/* eslint-disable */
 import("../pkg/index.js").then(lib => {
-    /* eslint-disable */
     const myLib = {
         install: function (Vue, options) {
             lib.init();
@@ -16,7 +15,6 @@ import("../pkg/index.js").then(lib => {
             Vue.prototype.PIXI = PIXI;
         }
     };
-    /* eslint-enable */
 
     Vue.use(myLib);
     Vue.use(Buefy);
@@ -29,6 +27,5 @@ import("../pkg/index.js").then(lib => {
         render: (h) => h(App),
     }).$mount('#app');
 });
-
-
+/* eslint-enable */
 

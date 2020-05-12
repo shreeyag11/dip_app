@@ -1,18 +1,18 @@
-const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
-const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
+const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
+const WasmPackPlugin = require('@wasm-tool/wasm-pack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const dist = path.resolve(__dirname, "docs");
+const dist = path.resolve(__dirname, 'docs');
 
 module.exports = {
-  mode: "production",
+  mode: 'production',
   entry: {
-    index: "./js/index.js"
+    index: './js/index.js'
   },
   output: {
     path: dist,
-    filename: "[name].js",
+    filename: '[name].js',
   },
   module: {
     rules: [
@@ -63,14 +63,14 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin([
-      path.resolve(__dirname, "static")
+      path.resolve(__dirname, 'static')
     ]),
 
     new WasmPackPlugin({
       crateDirectory: __dirname,
-      forceMode: "production",
+      forceMode: 'production',
       pluginLogLevel: 'error',
-      extraArgs: "--no-typescript"
+      extraArgs: '--no-typescript'
     }),
 
     new VueLoaderPlugin()
