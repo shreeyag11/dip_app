@@ -6,7 +6,7 @@
   >
     <FileNotification />
     <NavBar />
-    <router-view id="routerView"/>
+    <router-view id="routerView" />
   </div>
 </template>
 
@@ -32,7 +32,10 @@ export default {
           // If dropped items aren't files, reject them
           if (ev.dataTransfer.items[i].kind === 'file') {
             const file = ev.dataTransfer.items[i].getAsFile();
-            this.$store.dispatch('PARSE_FILE', file);
+            this.$store.dispatch('PARSE_FILE', {
+              file,
+              type: 'viewer',
+            });
           }
         }
       } else {

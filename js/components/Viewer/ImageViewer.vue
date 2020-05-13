@@ -19,10 +19,13 @@ export default {
     file() {
       return this.$store.state.viewer.file;
     },
+    route() {
+      return this.$store.state.route;
+    }
   },
   watch: {
     file(newVal) {
-      if (this.$router.currentRoute.name === 'Viewer') {
+      if (this.route.name === 'Viewer') {
         this.fileChanged(newVal);
       }
     },

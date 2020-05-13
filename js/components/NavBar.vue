@@ -9,6 +9,12 @@
       </b-navbar-item>
       <b-navbar-item
         tag="router-link"
+        :to="{ path: '/ass_1' }"
+      >
+        Assignment 1
+      </b-navbar-item>
+      <b-navbar-item
+        tag="router-link"
         :to="{ path: '/Viewer' }"
       >
         Viewer

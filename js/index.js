@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import router from './router.js';
 import store from './store.js';
+import { sync } from 'vuex-router-sync'
 import App from './App.vue';
 import Buefy from 'buefy';
 
@@ -18,6 +19,8 @@ import("../pkg/index.js").then(lib => {
     Vue.use(Buefy);
     Vue.use(Vuex);
     Vue.config.productionTip = false;
+
+    const unsync = sync(store, router);
 
     const app = new Vue({
         router,
