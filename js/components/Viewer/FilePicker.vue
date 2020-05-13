@@ -45,7 +45,10 @@ export default {
 
   methods: {
     parse() {
-      this.$store.dispatch('PARSE_FILE', this.dropFile);
+      this.$store.dispatch('PARSE_FILE', {
+        file: this.dropFile,
+        type: 'viewer',
+      });
     },
   },
 };

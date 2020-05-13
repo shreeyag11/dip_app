@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
   data: () => ({}),
   mounted() {
@@ -15,7 +13,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileParseSuccessful', 'file']),
+    fileParseSuccessful() {
+      return this.$store.state.viewer.fileParseSuccessful;
+    },
+    file() {
+      return this.$store.state.viewer.file;
+    },
   },
   watch: {
     file(newVal) {
@@ -26,7 +29,6 @@ export default {
   },
   methods: {
     fileChanged(newVal) {
-      console.log('trying to render');
       const viewerDiv = document.getElementById('viewerDiv');
 
       while (viewerDiv.lastElementChild) {
