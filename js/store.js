@@ -16,6 +16,22 @@ export default new Vuex.Store({
       file: undefined,
       fileParseSuccessful: false,
     },
+    home: {
+      fileParseErrors: undefined,
+      file: undefined,
+      fileParseSuccessful: false,
+    },
+    page: ['viewer', 'ass1', 'home'],
+    pageName: {
+      viewer: 'Viewer',
+      ass1: 'Assignment 1',
+      home: 'Home'
+    },
+    pageNameRev: {
+      'Assignment 1': 'ass1',
+      Viewer: 'viewer',
+      Home: 'home',
+    },
   },
   mutations: {
     ADD_FILE_PARSE_ERRORS: (state, { errors, type }) => {

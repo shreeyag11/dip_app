@@ -1,16 +1,23 @@
 <template>
   <div
-    v-if="this.$store.state.fileParseSuccessful"
+    v-if="parseSuccessful"
     class="notification is-primary notify"
   >
-    Successfully parsed {{ this.$store.state.file.name }}
+    Successfully parsed {{ fileName }}
   </div>
 </template>
 
 <script>
 export default {
-
-
+  props: ['page'],
+  computed: {
+    parseSuccessful() {
+      return this.$store.state[this.page].fileParseSuccessful;
+    },
+    fileName() {
+      return this.$store.state[this.page].file.name;
+    },
+  },
 };
 </script>
 

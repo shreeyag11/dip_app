@@ -2,3 +2,6 @@ node_modules
 /target
 /pkg
 /wasm-pack.log
+
+js/components/Log.vue
+js/components/FilePicker.vue

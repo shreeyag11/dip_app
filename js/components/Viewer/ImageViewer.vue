@@ -8,8 +8,8 @@
 export default {
   data: () => ({}),
   mounted() {
-    if (this.$store.state.file && this.$store.state.fileParseSuccessful) {
-      this.fileChanged(this.$store.state.file);
+    if (this.$store.state.viewer.file && this.$store.state.viewer.fileParseSuccessful) {
+      this.fileChanged(this.$store.state.viewer.file);
     }
   },
   computed: {

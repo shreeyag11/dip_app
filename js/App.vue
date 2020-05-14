@@ -1,10 +1,8 @@
 <template>
   <div
     id="app"
-    @drop="dropHandler"
-    @dragover="dragOverHandler"
   >
-    <FileNotification />
+    <FileNotification :page="pageName" />
     <NavBar />
     <router-view id="routerView" />
   </div>
@@ -21,36 +19,13 @@ export default {
     FileNotification,
     NavBar,
   },
+  computed: {
+    pageName() {
+      return this.$store.state.pageNameRev[this.$store.state.route.name];
+    },
+  },
   methods: {
-    dropHandler(ev) {
-      // Prevent default behavior (Prevent file from being opened)
-      ev.preventDefault();
-
-      if (ev.dataTransfer.items) {
-        // Use DataTransferItemList interface to access the file(s)
-        for (let i = 0; i < ev.dataTransfer.items.length; i += 1) {
-          // If dropped items aren't files, reject them
-          if (ev.dataTransfer.items[i].kind === 'file') {
-            const file = ev.dataTransfer.items[i].getAsFile();
-            this.$store.dispatch('PARSE_FILE', {
-              file,
-              type: 'viewer',
-            });
-          }
-        }
-      } else {
-        // Use DataTransfer interface to access the file(s)
-        for (let i = 0; i < ev.dataTransfer.files.length; i += 1) {
-          console.log(
-            `2. ... file[${i}].name = ${ev.dataTransfer.files[i].name}`,
-          );
-        }
-      }
-    },
-    dragOverHandler(ev) {
-      // Prevent default behavior (Prevent file from being opened)
-      ev.preventDefault();
-    },
+   
   },
 };
 </script>
