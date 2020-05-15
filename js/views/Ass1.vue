@@ -9,7 +9,7 @@
 <script>
 import ImageViewer from '../components/Ass1/Renderer.vue';
 import FilePicker from '../components/FilePicker.vue';
-import Log from '../components/Ass1/Log.vue';
+import Log from '../components/Log.vue';
 
 export default {
   components: {

@@ -1,8 +1,16 @@
 #[macro_use]
 extern crate serde_derive;
+extern crate pest;
+#[macro_use]
+extern crate pest_derive;
 
 use console_error_panic_hook::set_once as set_panic_hook;
+use pest::Parser;
 use wasm_bindgen::prelude::*;
+
+#[derive(Parser)]
+#[grammar = "ass1.pest"]
+pub struct Ass1Parser;
 
 #[wasm_bindgen]
 extern "C" {
@@ -59,9 +67,43 @@ macro_rules! unwrap {
 }
 
 #[allow(unreachable_patterns)]
-pub fn parse_header(file_text: &str) -> (FileHeaderParseResponse, Vec<String>) {
+pub fn viewer_parse_header(file_text: &str) -> (FileHeaderParseResponse, Vec<String>) {
     let lines: Vec<&str> = file_text.split('\n').take(3).collect();
     let mut errors: Vec<String> = vec![];
+
+    if lines.len() == 0 {
+        errors.push(String::from(
+            "I think the file is empty, splitting at newline gives 0 lines.",
+        ));
+        return (
+            FileHeaderParseResponse {
+                file_type: String::new(),
+                height: 0,
+                width: 0,
+            },
+            errors,
+        );
+    } else if lines.len() == 1 {
+        errors.push(String::from("There is only a single line in the file, there need to be at least 3 for file_type, height, and width."));
+        return (
+            FileHeaderParseResponse {
+                file_type: String::new(),
+                height: 0,
+                width: 0,
+            },
+            errors,
+        );
+    } else if lines.len() == 2 {
+        errors.push(String::from("There is only 2 lines in the file, there need to be at least 3 for file_type, height, and width."));
+        return (
+            FileHeaderParseResponse {
+                file_type: String::new(),
+                height: 0,
+                width: 0,
+            },
+            errors,
+        );
+    }
 
     let file_type = lines[0];
 
@@ -80,33 +122,31 @@ pub fn parse_header(file_text: &str) -> (FileHeaderParseResponse, Vec<String>) {
 
     (
         FileHeaderParseResponse {
-        file_type: String::from(file_type),
-        height,
-        width,
-        }, 
-        errors
+            file_type: String::from(file_type),
+            height,
+            width,
+        },
+        errors,
     )
 }
 
-#[wasm_bindgen]
-pub fn parse_header_json(file_text: &str) -> Result<JsValue, JsValue> {
-
-    let (res, errors) = parse_header(file_text);
+#[wasm_bindgen(js_name = viewerParseHeader)]
+pub fn viewer_parse_header_json(file_text: &str) -> Result<JsValue, JsValue> {
+    let (res, errors) = viewer_parse_header(file_text);
 
     if errors.len() != 0 {
         let errors = errors.join("#!@");
         Err(JsValue::from(errors))
     } else {
-            Ok(JsValue::from_serde(&res).unwrap())
-
+        Ok(JsValue::from_serde(&res).unwrap())
     }
 }
 
 #[allow(unreachable_patterns)]
-pub fn parse_pixels(file_text: &str) -> (Vec<u8>, Vec<String>) {
+pub fn viewer_parse_pixels(file_text: &str) -> (Vec<u8>, Vec<String>) {
     let lines: Vec<&str> = file_text.split('\n').collect();
 
-    let (header, errs) = parse_header(&file_text);
+    let (header, errs) = viewer_parse_header(&file_text);
     let file_type = header.file_type;
     let height = header.height;
     let width = header.width;
@@ -124,7 +164,7 @@ pub fn parse_pixels(file_text: &str) -> (Vec<u8>, Vec<String>) {
             lines.len() - 3
         ));
     }
-    
+
     let mut pixels: Vec<u8> = Vec::with_capacity(height * width);
 
     if file_type == "RGB" {
@@ -185,10 +225,10 @@ pub fn parse_pixels(file_text: &str) -> (Vec<u8>, Vec<String>) {
     (pixels, errors)
 }
 
-#[wasm_bindgen]
-pub fn parse_pixels_json(file_text: &str) -> Result<Vec<u8>, JsValue> {
-    let (pixels, errors) = parse_pixels(file_text);
-    
+#[wasm_bindgen(js_name = viewerParsePixels)]
+pub fn viewer_parse_pixels_json(file_text: &str) -> Result<Vec<u8>, JsValue> {
+    let (pixels, errors) = viewer_parse_pixels(file_text);
+
     if errors.len() != 0 {
         let errors = errors.join("#!@");
         Err(JsValue::from(errors))
@@ -197,7 +237,45 @@ pub fn parse_pixels_json(file_text: &str) -> Result<Vec<u8>, JsValue> {
     }
 }
 
-pub fn render_pixels(pixels: Vec<u8>, selector: &str) -> Result<(), ()> {
+pub fn ass1_parse_file(file_text: &str) -> (Vec<f64>, String) {
+    let mut array: Vec<f64> = Vec::with_capacity(256 * 256);
+    let mut errors = String::from("");
+    let file_text = file_text.replace(",", ",\n");
 
-    Ok(())
+    let mut file = match Ass1Parser::parse(Rule::ARRAY, &file_text) {
+        Ok(val) => val,
+        Err(err) => {
+            errors = format!("{}", err);
+            return (Vec::new(), errors);
+        }
+    };
+    let file = file // unwrap the parse result
+        .next()
+        .unwrap(); // get and unwrap the `file` rule; never fails
+
+    for val in file.into_inner() {
+        match val.as_rule() {
+            Rule::FLOATING_POINT_NUMBER => array.push(val.as_str().parse::<f64>().unwrap()),
+            Rule::OPENING_SQUARE_BRACKET => (),
+            Rule::CLOSING_SQUARE_BRACKET => (),
+            Rule::COMMA => (),
+            Rule::EOI => (),
+            _ => unreachable!(),
+        }
+    }
+
+    (array, errors)
+}
+
+#[wasm_bindgen(js_name = ass1ParseFile)]
+pub fn ass1_parse_file_json(file_text: &str) -> Result<Vec<f64>, JsValue> {
+    let (res, errors) = ass1_parse_file(file_text);
+
+    let err: String = errors.split('\n').collect::<Vec<&str>>().join("#!@");
+
+    if errors != "" {
+        Err(JsValue::from(err))
+    } else {
+        Ok(res)
+    }
 }

@@ -7,11 +7,6 @@
 <script>
 export default {
   data: () => ({}),
-  mounted() {
-    if (this.$store.state.viewer.file && this.$store.state.viewer.fileParseSuccessful) {
-      this.fileChanged(this.$store.state.viewer.file);
-    }
-  },
   computed: {
     fileParseSuccessful() {
       return this.$store.state.viewer.fileParseSuccessful;
@@ -21,14 +16,17 @@ export default {
     },
     route() {
       return this.$store.state.route;
-    }
+    },
   },
   watch: {
     file(newVal) {
-      if (this.route.name === 'Viewer') {
-        this.fileChanged(newVal);
-      }
+      this.fileChanged(newVal);
     },
+  },
+  mounted() {
+    if (this.$store.state.viewer.file && this.$store.state.viewer.fileParseSuccessful) {
+      this.fileChanged(this.$store.state.viewer.file);
+    }
   },
   methods: {
     fileChanged(newVal) {

@@ -1,0 +1,42 @@
+WHITESPACE = _{ 
+    SEPARATOR+ | NEWLINE
+}
+
+COMMA = {
+    "," |
+    ("," ~ WHITESPACE) |
+    (WHITESPACE ~ ",") |
+    (WHITESPACE ~ "," ~ WHITESPACE)
+}
+
+OPENING_SQUARE_BRACKET = {
+    "[" |
+    ("[" ~ WHITESPACE) |
+    (WHITESPACE ~ "[") |
+    (WHITESPACE ~ "[" ~ WHITESPACE)
+}
+
+CLOSING_SQUARE_BRACKET = {
+    "]" |
+    ("]" ~ WHITESPACE) |
+    (WHITESPACE ~ "]") |
+    (WHITESPACE ~ "]" ~ WHITESPACE)
+}
+
+FLOATING_POINT_NUMBER = {
+    DECIMAL_NUMBER+ ~
+    ("." ~ DECIMAL_NUMBER+)
+}
+
+ELEMENT = _{
+    FLOATING_POINT_NUMBER ~
+    COMMA?
+}
+
+ARRAY = {
+    SOI ~
+    OPENING_SQUARE_BRACKET ~
+    ELEMENT+ ~
+    CLOSING_SQUARE_BRACKET ~
+    EOI
+}

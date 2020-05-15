@@ -7,46 +7,44 @@
 <script>
 export default {
   data: () => ({}),
+  computed: {
+    fileParseSuccessful() {
+      return this.$store.state.ass1.fileParseSuccessful;
+    },
+    file() {
+      return this.$store.state.ass1.file;
+    },
+  },
+  watch: {
+    file(newVal) {
+      this.fileChanged(newVal);
+    },
+  },
   mounted() {
     if (this.$store.state.file && this.$store.state.fileParseSuccessful) {
       this.fileChanged(this.$store.state.file);
     }
   },
-  computed: {
-    fileParseSuccessful() {
-      return this.$store.state.viewer.fileParseSuccessful;
-    },
-    file() {
-      return this.$store.state.viewer.file;
-    },
-  },
-  watch: {
-    file(newVal) {
-      if (this.$router.currentRoute.name === 'Viewer') {
-        this.fileChanged(newVal);
-      }
-    },
-  },
   methods: {
     fileChanged(newVal) {
-      const viewerDiv = document.getElementById('viewerDiv');
+      // const viewerDiv = document.getElementById('viewerDiv');
 
-      while (viewerDiv.lastElementChild) {
-        viewerDiv.removeChild(viewerDiv.lastElementChild);
-      }
+      // while (viewerDiv.lastElementChild) {
+      //   viewerDiv.removeChild(viewerDiv.lastElementChild);
+      // }
 
-      const canvas = document.createElement('canvas');
-      canvas.width = newVal.width;
-      canvas.height = newVal.height;
-      const ctx = canvas.getContext('2d');
+      // const canvas = document.createElement('canvas');
+      // canvas.width = newVal.width;
+      // canvas.height = newVal.height;
+      // const ctx = canvas.getContext('2d');
 
-      ctx.putImageData(
-        new ImageData(newVal.pixels, newVal.width, newVal.height),
-        0,
-        0,
-      );
+      // ctx.putImageData(
+      //   new ImageData(newVal.pixels, newVal.width, newVal.height),
+      //   0,
+      //   0,
+      // );
 
-      viewerDiv.appendChild(canvas);
+      // viewerDiv.appendChild(canvas);
     },
   },
 };

@@ -25,7 +25,7 @@ export default new Vuex.Store({
     pageName: {
       viewer: 'Viewer',
       ass1: 'Assignment 1',
-      home: 'Home'
+      home: 'Home',
     },
     pageNameRev: {
       'Assignment 1': 'ass1',
@@ -49,14 +49,14 @@ export default new Vuex.Store({
     PARSE_FILE(context, { file, type }) {
       const reader = new FileReader();
       reader.readAsText(file);
+      reader.onerror = (error) => console.log(error);
 
       if (type === 'viewer') {
-        reader.onerror = (error) => console.log(error);
         reader.onload = (event) => {
           const text = event.target.result.trim();
           try {
-            const header = this._vm.lib.parse_header_json(text);
-            header.pixels = new Uint8ClampedArray(this._vm.lib.parse_pixels_json(text));
+            const header = this._vm.lib.viewerParseHeader(text);
+            header.pixels = new Uint8ClampedArray(this._vm.lib.viewerParsePixels(text));
             header.name = file.name;
             context.commit('ADD_FILE', {
               file: header,
@@ -70,7 +70,25 @@ export default new Vuex.Store({
           }
         };
       } else if (type === 'ass1') {
-        console.log(`read: ${file.name}`);
+        reader.onload = (event) => {
+          const text = event.target.result;
+          try {
+            const header = {
+              name: file.name,
+            };
+            header.values = this._vm.lib.ass1ParseFile(text);
+            console.log(header.values);
+            context.commit('ADD_FILE', {
+              file: header,
+              type: 'ass1',
+            });
+          } catch (errors) {
+            context.commit('ADD_FILE_PARSE_ERRORS', {
+              errors,
+              type: 'ass1',
+            });
+          }
+        };
       }
     },
   },

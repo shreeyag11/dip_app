@@ -9,8 +9,6 @@
 </template>
 
 <script>
-// TODO: Shreeya - make div #app cover the whole screen
-
 import NavBar from './components/NavBar.vue';
 import FileNotification from './components/FileNotification.vue';
 
@@ -25,7 +23,7 @@ export default {
     },
   },
   methods: {
-   
+
   },
 };
 </script>
