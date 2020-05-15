@@ -68,7 +68,7 @@ macro_rules! unwrap {
 
 #[allow(unreachable_patterns)]
 pub fn viewer_parse_header(file_text: &str) -> (FileHeaderParseResponse, Vec<String>) {
-    let lines: Vec<&str> = file_text.split('\n').take(3).collect();
+    let lines: Vec<&str> = file_text.lines().take(3).collect();
     let mut errors: Vec<String> = vec![];
 
     if lines.len() == 0 {
@@ -144,7 +144,7 @@ pub fn viewer_parse_header_json(file_text: &str) -> Result<JsValue, JsValue> {
 
 #[allow(unreachable_patterns)]
 pub fn viewer_parse_pixels(file_text: &str) -> (Vec<u8>, Vec<String>) {
-    let lines: Vec<&str> = file_text.split('\n').collect();
+    let lines: Vec<&str> = file_text.lines().collect();
 
     let (header, errs) = viewer_parse_header(&file_text);
     let file_type = header.file_type;
@@ -271,7 +271,74 @@ pub fn ass1_parse_file(file_text: &str) -> (Vec<f64>, String) {
 pub fn ass1_parse_file_json(file_text: &str) -> Result<Vec<f64>, JsValue> {
     let (res, errors) = ass1_parse_file(file_text);
 
-    let err: String = errors.split('\n').collect::<Vec<&str>>().join("#!@");
+    let err: String = errors.lines().collect::<Vec<&str>>().join("#!@");
+
+    if errors != "" {
+        Err(JsValue::from(err))
+    } else {
+        Ok(res)
+    }
+}
+
+pub fn ass1_convert_to_csv(file_text: &str) -> (String, String) {
+    // for c in file_text.chars() {
+    //     if c == ',' {
+    //         comma_count = comma_count + 1;
+    //         if comma_count == img_width {
+    //             comma_count = 0;
+    //             csv.push_str(",\n");
+    //         }
+    //     } else {
+    //         csv.push(c);
+    //     }
+    // }
+
+    // csv
+
+    let mut errors = String::from("");
+    let img_width = 256usize;
+    let file_text = file_text.replace(",", ",\n");
+    let mut csv = String::new();
+    let mut comma_count = 0;
+
+    let mut file = match Ass1Parser::parse(Rule::ARRAY, &file_text) {
+        Ok(val) => val,
+        Err(err) => {
+            errors = format!("{}", err);
+            return (String::new(), errors);
+        }
+    };
+    let file = file // unwrap the parse result
+        .next()
+        .unwrap(); // get and unwrap the `file` rule; never fails
+
+    for val in file.into_inner() {
+        match val.as_rule() {
+            Rule::FLOATING_POINT_NUMBER => csv.push_str(val.as_str()),
+            Rule::OPENING_SQUARE_BRACKET => (),
+            Rule::CLOSING_SQUARE_BRACKET => (),
+            Rule::COMMA => {
+                comma_count = comma_count + 1;
+                if comma_count == img_width {
+                    comma_count = 0;
+                    csv.push_str(",\n");
+                } else {
+                    csv.push(',');
+                }
+            }
+            Rule::EOI => (),
+            _ => unreachable!(),
+        }
+    }
+
+    (csv, errors)
+}
+
+#[wasm_bindgen(js_name = ass1ConvertToCsv)]
+pub fn ass1_convert_to_csv_json(file_text: &str) -> Result<String, JsValue> {
+    let (res, errors) = ass1_convert_to_csv(file_text);
+
+    let err: String = errors.lines().collect::<Vec<&str>>().join("#!@");
 
     if errors != "" {
         Err(JsValue::from(err))
