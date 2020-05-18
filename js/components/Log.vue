@@ -15,7 +15,10 @@
         class="message-body"
       >
         <div v-if="$store.state[pageName].fileParseSuccessful">
-          <p v-for="msg in logMessage">
+          <p
+            v-for="msg in logMessage"
+            :key="msg"
+          >
             {{ msg }}
           </p>
         </div>

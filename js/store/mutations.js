@@ -12,7 +12,9 @@ const mutations = {
   },
   ADD_CSV_FILE: (state, file) => {
     state.ass1.csvFileUrl = file;
-    console.log(file);
+  },
+  ADD_ASCII_ART_FILE: (state, file) => {
+    state.ass1.asciiArtFileUrl = file;
   },
 };
 

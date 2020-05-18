@@ -271,7 +271,7 @@ pub fn ass1_parse_file(file_text: &str) -> (Vec<f64>, String) {
 pub fn ass1_parse_file_json(file_text: &str) -> Result<Vec<f64>, JsValue> {
     let (res, errors) = ass1_parse_file(file_text);
 
-    let err: String = errors.lines().collect::<Vec<&str>>().join("#!@");
+    let err: String = errors.lines().collect::<Vec<&str>>().join("\n");
 
     if errors != "" {
         Err(JsValue::from(err))
@@ -281,20 +281,6 @@ pub fn ass1_parse_file_json(file_text: &str) -> Result<Vec<f64>, JsValue> {
 }
 
 pub fn ass1_convert_to_csv(file_text: &str) -> (String, String) {
-    // for c in file_text.chars() {
-    //     if c == ',' {
-    //         comma_count = comma_count + 1;
-    //         if comma_count == img_width {
-    //             comma_count = 0;
-    //             csv.push_str(",\n");
-    //         }
-    //     } else {
-    //         csv.push(c);
-    //     }
-    // }
-
-    // csv
-
     let mut errors = String::from("");
     let img_width = 256usize;
     let file_text = file_text.replace(",", ",\n");
@@ -339,7 +325,73 @@ pub fn ass1_convert_to_csv_json(file_text: &str) -> Result<String, JsValue> {
     let (res, errors) = ass1_convert_to_csv(file_text);
 
     let err: String = errors.lines().collect::<Vec<&str>>().join("#!@");
+    if errors != "" {
+        Err(JsValue::from(err))
+    } else {
+        Ok(res)
+    }
+}
 
+pub fn ass1_convert_to_ascii_art(
+    file_text: &str,
+    light_char: char,
+    dark_char: char,
+    threshold: f64,
+) -> (String, String) {
+    let mut array: String = String::from("");
+    let img_width = 256;
+    let mut counter = 0;
+    let mut errors = String::from("");
+    let file_text = file_text.replace(",", ",\n");
+
+    let mut file = match Ass1Parser::parse(Rule::ARRAY, &file_text) {
+        Ok(val) => val,
+        Err(err) => {
+            errors = format!("{}", err);
+            return (String::new(), errors);
+        }
+    };
+    let file = file // unwrap the parse result
+        .next()
+        .unwrap(); // get and unwrap the `file` rule; never fails
+
+    for val in file.into_inner() {
+        match val.as_rule() {
+            Rule::FLOATING_POINT_NUMBER => {
+                let num = val.as_str().parse::<f64>().unwrap();
+                if num <= threshold {
+                    array.push(light_char);
+                } else {
+                    array.push(dark_char);
+                }
+
+                counter = counter + 1;
+                if counter == img_width {
+                    counter = 0;
+                    array.push('\n');
+                }
+            }
+            Rule::OPENING_SQUARE_BRACKET => (),
+            Rule::CLOSING_SQUARE_BRACKET => (),
+            Rule::COMMA => (),
+            Rule::EOI => (),
+            _ => unreachable!(),
+        }
+    }
+
+    (array, errors)
+}
+
+#[wasm_bindgen(js_name = ass1ConvertToAsciiArt)]
+pub fn ass1_convert_to_ascii_art_json(
+    file_text: &str,
+    light_char: char,
+    dark_char: char,
+    threshold: f64,
+) -> Result<String, JsValue> {
+    let (res, errors) = ass1_convert_to_ascii_art(file_text, light_char, dark_char, threshold);
+
+    let err: String = errors.lines().collect::<Vec<&str>>().join("\n");
     if errors != "" {
         Err(JsValue::from(err))
     } else {
