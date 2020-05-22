@@ -13,12 +13,6 @@
       >
         Assignment 1
       </b-navbar-item>
-      <b-navbar-item
-        tag="router-link"
-        :to="{ path: '/Viewer' }"
-      >
-        Viewer
-      </b-navbar-item>
     </template>
 
     <template slot="end">
