@@ -5,79 +5,47 @@
         Assignment 1
       </div>
       <div class="column is-half">
-        <article class="box">
-          <b-button
-            type="is-link"
-            tag="a"
-            :disabled="convIsDisabled"
-            :download="csvFileName"
-            :href="$store.state.ass1.csvFileUrl"
-          >
-            Convert to a CSV file
-          </b-button>
+        <article class="columns is-centered">
+          <b-field class="column menuItem">
+            <b-button
+              type="is-link"
+              tag="a"
+              :disabled="convIsDisabled"
+              class="is-fullwidth"
+              @click="convToCsvClick"
+            >
+              Convert to a CSV file
+            </b-button>
+          </b-field>
 
-          <b-button
-            type="is-link"
-            :disabled="convIsDisabled"
-            @click="isAsciiModalActive = true"
+          <b-field class="column menuItem">
+            <b-button
+              type="is-link"
+              :disabled="convIsDisabled"
+              class="is-fullwidth"
+              @click="convToAsciiClick"
+            >
+              Convert to ASCII Art
+            </b-button>
+          </b-field>
+          <b-field
+            label="Image Width"
+            class="column menuItem"
           >
-            Convert to ASCII Art
-          </b-button>
+            <b-numberinput
+              v-model="imgWidth"
+              controls-position="compact"
+              controls-rounded
+              class="is-fullwidth"
+              :disabled="convIsDisabled"
+            />
+          </b-field>
         </article>
       </div>
     </div>
-    <b-modal :active.sync="isAsciiModalActive"
-             has-modal-card
-             trap-focus
-             :destroy-on-hide="false"
-             aria-role="dialog"
-             aria-model
-    >
-        <form action="">
-                <div class="modal-card" style="width: auto">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">Convert to ASCII Art</p>
-                    </header>
-                    <section class="modal-card-body">
-                        <b-field label="Enter the character to use for light colored pixels">
-                            <b-input
-                                type="text"
-                                :value="asciiLightChar"
-                                placeholder="~"
-                                required>
-                            </b-input>
-                            <p class="help is-danger" v-if="asciiLightCharInvalid"> Please enter a single character </p>
-                        </b-field>
 
-                        <b-field label="Enter the character to use for dark colored pixels">
-                            <b-input
-                                type="text"
-                                :value="asciiDarkChar"
-                                placeholder="8"
-                                required>
-                            </b-input>
-                            <p class="help is-danger" v-if="asciiDarkCharInvalid"> Please enter a single character </p>
-                        </b-field>
-                        </b-field>
+    <AsciiModal :img-width="imgWidth" />
 
-                        <b-field label="Enter the threshold used to determine light/dark color for pixels">
-                            <b-input
-                                type="text"
-                                :value="asciiThreshold"
-                                placeholder="0.5"
-                                required>
-                            </b-input>
-                            <p class="help is-danger" v-if="asciiThresholdInvalid"> Please enter a floating point value </p>
-                        </b-field>
-                        </b-field>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button class="button" type="button" @click="closeAsciiModal">Close</button>
-                        <button class="button is-primary" type="button" @click="submitAsciiModal">Convert</button>
-                    </footer>
-                </div>
-            </form>
-    </b-modal>
     <ImageViewer />
     <Log :page-name="pageName" />
     <FilePicker :page-name="pageName" />
@@ -94,19 +62,13 @@ export default {
   components: {
     ImageViewer,
     FilePicker,
-      Log,
-      AsciiModal
+    Log,
+    AsciiModal,
   },
   data() {
-      return {
-          isAsciiModalActive: false,
-          asciiLightChar: undefined,
-          asciiDarkChar: undefined,
-          asciiThreshold: undefined,
-          asciiLightCharInvalid: undefined,
-          asciiDarkCharInvalid: undefined,
-          asciiThresholdInvalid: undefined
-      };
+    return {
+      imgWidth: 256,
+    };
   },
   computed: {
     pageName() {
@@ -166,49 +128,33 @@ export default {
       // Prevent default behavior (Prevent file from being opened)
       ev.preventDefault();
     },
-      closeAsciiModal() {
-          this.isAsciiModalActive = false;
-          this.asciiLightChar = undefined;
-          this.asciiDarkChar = undefined;
-          this.asciiThreshold = undefined;
-          this.asciiLightCharInvalid = undefined;
-          this.asciiDarkCharInvalid = undefined;
-          this.asciiThresholdInvalid = undefined;
-      },
-      submitAsciiModal() {
-          if (this.asciiLightChar.trim) {
-              if (this.asciiLightChar.trim().length !== 1) {
-                  this.asciiLightCharInvalid = true;
-              } else {
-                  this.asciiLightChar = this.asciiLightChar.trim();
-              }
-          } else {
-                  this.asciiLightCharInvalid = true;
-          }
+    convToCsvClick() {
+      this.$store.dispatch('ASS1_CONVERT_TO_CSV', {
+        imgWidth: this.$store.state.ass1.imgWidth,
+      });
 
-          if (this.asciiDarkChar.trim) {
-              if (this.asciiDarkChar.trim().length !== 1) {
-                  this.asciiDarkCharInvalid = true;
-              } else {
-                  this.asciiDarkChar = this.asciiDarkChar.trim();
-              }
-          } else {
-                  this.asciiLightCharInvalid = true;
-          }
-
-          if (this.asciiThreshold) {
-              if (parseFloat(this.asciiThreshold)) {
-                  this.asciiThreshold = parseFloat(this.asciiThreshold)
-              } else {
-                  this.asciiThresholdInvalid = true;
-              }
-          } else {
-              this.asciiThresholdInvalid = true;
-          }
-      }
+      const a = document.createElement('a');
+      a.setAttribute('href', this.$store.state.ass1.csvFileUrl);
+      a.setAttribute(
+        'download',
+        this.$store.state.ass1.file.name.replace('.txt', '.csv'),
+      );
+      a.click();
+      a.remove();
+    },
+    convToAsciiClick() {
+      this.$store.commit('TOGGLE_ASCII_MODAL_ON');
+    },
   },
 };
 </script>
 
 <style scoped>
+.menuItem {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  box-sizing: unset;
+}
 </style>

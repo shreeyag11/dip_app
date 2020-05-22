@@ -4,7 +4,11 @@
         "**/docs": true,
         "**/node_modules": true,
         "**/pkg": true,
-        "**/target": true
+        "**/target": true,
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
     },
     "cSpell.words": [
         "Vuex",

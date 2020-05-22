@@ -280,9 +280,8 @@ pub fn ass1_parse_file_json(file_text: &str) -> Result<Vec<f64>, JsValue> {
     }
 }
 
-pub fn ass1_convert_to_csv(file_text: &str) -> (String, String) {
+pub fn ass1_convert_to_csv(file_text: &str, img_width: usize) -> (String, String) {
     let mut errors = String::from("");
-    let img_width = 256usize;
     let file_text = file_text.replace(",", ",\n");
     let mut csv = String::new();
     let mut comma_count = 0;
@@ -321,8 +320,8 @@ pub fn ass1_convert_to_csv(file_text: &str) -> (String, String) {
 }
 
 #[wasm_bindgen(js_name = ass1ConvertToCsv)]
-pub fn ass1_convert_to_csv_json(file_text: &str) -> Result<String, JsValue> {
-    let (res, errors) = ass1_convert_to_csv(file_text);
+pub fn ass1_convert_to_csv_json(file_text: &str, img_width: usize) -> Result<String, JsValue> {
+    let (res, errors) = ass1_convert_to_csv(file_text, img_width);
 
     let err: String = errors.lines().collect::<Vec<&str>>().join("#!@");
     if errors != "" {
@@ -337,9 +336,10 @@ pub fn ass1_convert_to_ascii_art(
     light_char: char,
     dark_char: char,
     threshold: f64,
+    img_width: usize,
 ) -> (String, String) {
+    log(format!("{}", img_width).as_str());
     let mut array: String = String::from("");
-    let img_width = 256;
     let mut counter = 0;
     let mut errors = String::from("");
     let file_text = file_text.replace(",", ",\n");
@@ -388,8 +388,9 @@ pub fn ass1_convert_to_ascii_art_json(
     light_char: char,
     dark_char: char,
     threshold: f64,
+    img_width: usize
 ) -> Result<String, JsValue> {
-    let (res, errors) = ass1_convert_to_ascii_art(file_text, light_char, dark_char, threshold);
+    let (res, errors) = ass1_convert_to_ascii_art(file_text, light_char, dark_char, threshold, img_width);
 
     let err: String = errors.lines().collect::<Vec<&str>>().join("\n");
     if errors != "" {

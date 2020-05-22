@@ -29,27 +29,8 @@ const actions = {
           const header = {
             name: file.name,
           };
-          header.values = this._vm.lib.ass1ParseFile(text);
-          const csvValues = this._vm.lib.ass1ConvertToCsv(text);
-          const asciiValues = this._vm.lib.ass1ConvertToAsciiArt(text, '~', '8', 0.5);
-          console.log(asciiValues);
-          let csvFile;
-          const data = new Blob([csvValues], { type: 'text/plain' });
-
-          let asciiFile;
-          const asciiData = new Blob([asciiValues], { type: 'text/plain' });
-          // If we are replacing a previously generated file we need to
-          // manually revoke the object URL to avoid memory leaks.
-          if (csvFile !== null) {
-            window.URL.revokeObjectURL(csvFile);
-            window.URL.revokeObjectURL(asciiFile);
-          }
-
-          csvFile = window.URL.createObjectURL(data);
-          asciiFile = window.URL.createObjectURL(asciiData);
-
-          context.commit('ADD_CSV_FILE', csvFile);
-          context.commit('ADD_ASCII_ART_FILE', asciiFile);
+          header.text = text;
+          this._vm.lib.ass1ParseFile(text);
           context.commit('ADD_FILE', {
             file: header,
             type: 'ass1',
@@ -61,6 +42,46 @@ const actions = {
           });
         }
       };
+    }
+  },
+  ASS1_CONVERT_TO_ASCII(context, {
+    lightChar, darkChar, threshold, imgWidth,
+  }) {
+    const { text } = context.state.ass1.file;
+    try {
+      const asciiValues = this._vm.lib.ass1ConvertToAsciiArt(text, lightChar, darkChar, threshold, imgWidth);
+      const { asciiFileUrl } = context.state.ass1;
+      const asciiData = new Blob([asciiValues], { type: 'text/plain' });
+
+      if (asciiFileUrl !== null) {
+        window.URL.revokeObjectURL(asciiFileUrl);
+      }
+
+      context.commit('ADD_ASCII_ART_FILE', window.URL.createObjectURL(asciiData));
+    } catch (errors) {
+      context.commit('ADD_FILE_PARSE_ERRORS', {
+        errors,
+        type: 'ass1',
+      });
+    }
+  },
+  ASS1_CONVERT_TO_CSV(context, { imgWidth }) {
+    const { text } = context.state.ass1.file;
+    try {
+      const csvValues = this._vm.lib.ass1ConvertToCsv(text, imgWidth);
+      const { csvFileUrl } = context.state.ass1;
+      const csvData = new Blob([csvValues], { type: 'text/plain' });
+
+      if (csvFileUrl !== null) {
+        window.URL.revokeObjectURL(csvFileUrl);
+      }
+
+      context.commit('ADD_CSV_FILE', window.URL.createObjectURL(csvData));
+    } catch (errors) {
+      context.commit('ADD_FILE_PARSE_ERRORS', {
+        errors,
+        type: 'ass1',
+      });
     }
   },
 };
