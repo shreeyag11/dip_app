@@ -14,7 +14,13 @@ const mutations = {
     state.ass1.csvFileUrl = file;
   },
   ADD_ASCII_ART_FILE: (state, file) => {
-    state.ass1.asciiArtFileUrl = file;
+    state.ass1.asciiFileUrl = file;
+  },
+  TOGGLE_ASCII_MODAL_ON: (state) => {
+    state.ass1.isAsciiModalActive = true;
+  },
+  TOGGLE_ASCII_MODAL_OFF: (state) => {
+    state.ass1.isAsciiModalActive = false;
   },
 };
 

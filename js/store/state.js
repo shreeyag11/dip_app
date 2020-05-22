@@ -10,6 +10,9 @@ const state = {
     fileParseSuccessful: false,
     type: undefined,
     csvFileUrl: undefined,
+    asciiFileUrl: undefined,
+    isAsciiModalActive: false,
+    imgWidth: 256,
   },
   home: {
     fileParseErrors: undefined,
